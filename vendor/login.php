@@ -1,15 +1,15 @@
 <?php
 /**
- * Administrator Login
+ * Vendor Boutique Login
  */
 
-$page_title = "Admin Central Login";
+$page_title = "Vendor Portal Login";
 $path_prefix = '../';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/helpers.php';
 
-if (isset($_SESSION['admin_id'])) {
+if (isset($_SESSION['vendor_id'])) {
     header("Location: dashboard.php");
     exit();
 }
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
 
     if (empty($email)) {
-        $errors['email'] = "Admin email is required.";
+        $errors['email'] = "Business email is required.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors['email'] = "Please enter a valid email address.";
     }
@@ -33,18 +33,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errors)) {
         try {
-            $stmt = $pdo->prepare("SELECT * FROM admins WHERE email = :email LIMIT 1");
+            $stmt = $pdo->prepare("SELECT * FROM vendors WHERE email = :email LIMIT 1");
             $stmt->execute([':email' => $email]);
-            $admin = $stmt->fetch();
+            $vendor = $stmt->fetch();
 
-            if ($admin) {
-                if ($admin['status'] !== 'active') {
-                    $errors['general'] = "Your admin account is inactive.";
-                } elseif (password_verify($password, $admin['password'])) {
-                    $_SESSION['admin_id'] = $admin['admin_id'];
-                    $_SESSION['full_name'] = $admin['full_name'];
-                    $_SESSION['email'] = $admin['email'];
-                    $_SESSION['role'] = $admin['role'];
+            if ($vendor) {
+                if ($vendor['status'] === 'blocked') {
+                    $errors['general'] = "Your vendor account has been suspended. Please contact administrator support.";
+                } elseif ($vendor['status'] === 'pending') {
+                    $errors['general'] = "Your vendor boutique application is currently under review by our admin team. You will be notified upon approval.";
+                } elseif (password_verify($password, $vendor['password'])) {
+                    // Approved Vendor Login
+                    $_SESSION['vendor_id'] = $vendor['vendor_id'];
+                    $_SESSION['vendor_name'] = $vendor['full_name'];
+                    $_SESSION['business_name'] = $vendor['business_name'] ?? $vendor['full_name'];
+                    $_SESSION['vendor_email'] = $vendor['email'];
 
                     $redirect = $_GET['redirect'] ?? 'dashboard.php';
                     header("Location: " . $redirect);
@@ -56,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $errors['general'] = "Invalid email or password.";
             }
         } catch (PDOException $e) {
-            $errors['general'] = "Database error occurred.";
+            $errors['general'] = "Database error occurred. Please try again.";
         }
     }
 }
@@ -67,24 +70,24 @@ require_once __DIR__ . '/../includes/header.php';
 <div class="auth-wrapper-page">
     <div class="auth-brand-header">
         <a href="../index.php" class="auth-brand-logo">
-            <div class="logo-symbol" style="background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);">
-                <i class="fa-solid fa-shield-halved"></i>
+            <div class="logo-symbol">
+                <i class="fa-solid fa-shop"></i>
             </div>
             <span class="logo-main" style="font-size: 1.6rem;">CLOUD CLOSET</span>
         </a>
-        <p class="text-muted" style="font-size: 0.88rem;">System Administration Central</p>
+        <p class="text-muted" style="font-size: 0.88rem;">Vendor Boutique Portal</p>
     </div>
 
     <div class="auth-card-box">
         <!-- Role Switching Tabs -->
         <div class="auth-role-tabs">
             <a href="../login.php" class="auth-role-tab">Customer</a>
-            <a href="../vendor/login.php" class="auth-role-tab">Vendor</a>
-            <a href="login.php" class="auth-role-tab active">Admin</a>
+            <a href="login.php" class="auth-role-tab active">Vendor</a>
+            <a href="../admin/login.php" class="auth-role-tab">Admin</a>
         </div>
 
-        <h2 class="auth-card-title">Admin Central</h2>
-        <p class="auth-card-subtitle">Authenticate secure session to access platform controls</p>
+        <h2 class="auth-card-title">Vendor Portal</h2>
+        <p class="auth-card-subtitle">Manage your boutique inventory & rental bookings</p>
 
         <?php echo render_flash(); ?>
 
@@ -99,14 +102,14 @@ require_once __DIR__ . '/../includes/header.php';
             <?php echo csrf_field(); ?>
 
             <div class="form-group">
-                <label for="email" class="form-label">Administrator Email <span class="text-danger">*</span></label>
+                <label for="email" class="form-label">Business Email Address <span class="text-danger">*</span></label>
                 <div class="form-control-wrap">
                     <i class="fa-regular fa-envelope"></i>
                     <input type="email" 
                            id="email" 
                            name="email" 
                            class="form-input <?php echo isset($errors['email']) ? 'is-invalid' : ''; ?>" 
-                           placeholder="admin@cloudcloset.com" 
+                           placeholder="vendor@boutique.com" 
                            value="<?php echo htmlspecialchars($email); ?>" 
                            required>
                 </div>
@@ -123,7 +126,7 @@ require_once __DIR__ . '/../includes/header.php';
                            id="password" 
                            name="password" 
                            class="form-input <?php echo isset($errors['password']) ? 'is-invalid' : ''; ?>" 
-                           placeholder="Enter admin password" 
+                           placeholder="Enter vendor password" 
                            required>
                 </div>
                 <?php if (isset($errors['password'])): ?>
@@ -131,13 +134,14 @@ require_once __DIR__ . '/../includes/header.php';
                 <?php endif; ?>
             </div>
 
-            <button type="submit" class="btn btn-magenta btn-block btn-lg" style="margin-top: 24px; background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);" id="admin-login-btn">
-                Authenticate & Enter <i class="fa-solid fa-arrow-right"></i>
+            <button type="submit" class="btn btn-magenta btn-block btn-lg" style="margin-top: 24px;" id="vendor-login-btn">
+                Enter Vendor Portal <i class="fa-solid fa-arrow-right"></i>
             </button>
         </form>
 
         <div class="auth-bottom-links">
-            <p><a href="../index.php">&larr; Back to Main Website</a></p>
+            <p>Want to partner with us? <a href="register.php">Submit Vendor Application</a></p>
+            <p style="margin-top: 12px; font-size: 0.85rem;"><a href="../index.php">&larr; Back to Main Website</a></p>
         </div>
     </div>
 </div>

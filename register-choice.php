@@ -1,82 +1,66 @@
 <?php
 /**
  * Registration Role Selection
- * Cloud Closet Rental System
- *
- * This page allows visitors to choose whether they wish to register
- * as a customer/user (to rent clothes) or as a vendor (to list items).
  */
 
-// Define page title
 $page_title = "Choose Registration Type";
-
-// Start secure session
-session_start();
-
-// Include header and navbar
-require_once 'includes/header.php';
-require_once 'includes/navbar.php';
+require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/includes/navbar.php';
 ?>
 
-<main class="auth-page choice-page">
-    <div class="auth-container" style="max-width: 800px;">
-        <!-- Page Title & Subtitle -->
-        <div class="choice-header text-center" style="margin-bottom: 45px;">
-            <h1 class="choice-title" style="font-family: var(--font-heading); font-size: 2.8rem; color: var(--color-primary); margin-bottom: 12px; letter-spacing: -0.5px;">Create Your Account</h1>
-            <p class="choice-subtitle" style="font-size: 1.1rem; color: var(--color-text-muted); font-weight: 300;">Choose how you want to register with Cloud Closet</p>
-            <div class="title-underline" style="margin-top: 15px;"></div>
+<div class="auth-wrapper-page" style="padding-top: 110px;">
+    <div class="container" style="max-width: 860px;">
+        <div class="text-center" style="margin-bottom: 40px;">
+            <span class="hero-pill-badge" style="background: var(--color-magenta-subtle); color: var(--color-magenta); border: 1px solid rgba(225, 29, 72, 0.2);">
+                <i class="fa-solid fa-sparkles"></i> JOIN CLOUD CLOSET
+            </span>
+            <h1 style="font-family: var(--font-heading); font-size: 2.8rem; margin: 12px 0 8px; color: var(--text-primary);">Create Your Account</h1>
+            <p class="text-muted" style="font-size: 1.05rem;">Choose how you want to experience the sustainable fashion revolution</p>
         </div>
 
-        <!-- Choice Card Grid -->
-        <div class="choice-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;">
-            
-            <!-- Card 1: Customer / User -->
-            <div class="choice-card text-center" style="background-color: var(--color-white); padding: 50px 30px; border-radius: var(--border-radius-lg); box-shadow: 0 15px 40px rgba(30, 53, 47, 0.08); border: 1px solid rgba(30, 53, 47, 0.02); display: flex; flex-direction: column; align-items: center; justify-content: space-between; transition: var(--transition-smooth);">
-                <div class="choice-icon" style="font-size: 4rem; margin-bottom: 25px; filter: drop-shadow(0 4px 12px rgba(30, 53, 47, 0.15));">👤</div>
-                <h2 style="font-family: var(--font-heading); color: var(--color-primary); font-size: 1.75rem; margin-bottom: 15px; font-weight: 600;">Register as User</h2>
-                <p style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 35px; flex-grow: 1; max-width: 290px;">
-                    Rent dresses and manage your rentals. Access hundreds of designer items for your special occasions.
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;" class="choice-cards-container">
+            <!-- Card 1: Customer User -->
+            <div class="hero-role-card" style="padding: 44px 32px; background: #ffffff;">
+                <div class="role-icon-box" style="width: 64px; height: 64px; font-size: 1.8rem; margin-bottom: 20px;">
+                    <i class="fa-solid fa-user-heart"></i>
+                </div>
+                <h2 style="font-family: var(--font-heading); font-size: 1.7rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary);">Customer Account</h2>
+                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 30px; flex: 1;">
+                    Rent luxury designer dresses, manage your bookings, enjoy door-to-door delivery, and shine at every special occasion.
                 </p>
-                <a href="register.php" class="btn btn-primary btn-block btn-lg" id="choice-user-btn">Register as User</a>
+                <a href="register.php" class="btn btn-magenta btn-block btn-lg" id="choice-user-register-btn">
+                    Register as Customer <i class="fa-solid fa-arrow-right"></i>
+                </a>
             </div>
 
-            <!-- Card 2: Vendor -->
-            <div class="choice-card text-center" style="background-color: var(--color-white); padding: 50px 30px; border-radius: var(--border-radius-lg); box-shadow: 0 15px 40px rgba(30, 53, 47, 0.08); border: 1px solid rgba(30, 53, 47, 0.02); display: flex; flex-direction: column; align-items: center; justify-content: space-between; transition: var(--transition-smooth);">
-                <div class="choice-icon" style="font-size: 4rem; margin-bottom: 25px; filter: drop-shadow(0 4px 12px rgba(30, 53, 47, 0.15));">🏪</div>
-                <h2 style="font-family: var(--font-heading); color: var(--color-primary); font-size: 1.75rem; margin-bottom: 15px; font-weight: 600;">Register as Vendor</h2>
-                <p style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 35px; flex-grow: 1; max-width: 290px;">
-                    List your dresses and manage rental items. Turn your high-end wardrobe items into active income.
+            <!-- Card 2: Vendor Boutique -->
+            <div class="hero-role-card" style="padding: 44px 32px; background: #ffffff;">
+                <div class="role-icon-box" style="width: 64px; height: 64px; font-size: 1.8rem; margin-bottom: 20px; background: #e0f2fe; color: #0284c7;">
+                    <i class="fa-solid fa-store"></i>
+                </div>
+                <h2 style="font-family: var(--font-heading); font-size: 1.7rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary);">Vendor Boutique</h2>
+                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 30px; flex: 1;">
+                    Monetize your luxury wardrobe and designer inventory. List dresses, manage rental requests, and earn steady revenue.
                 </p>
-                <a href="vendor/register.php" class="btn btn-outline btn-block btn-lg" id="choice-vendor-btn">Register as Vendor</a>
+                <a href="vendor/register.php" class="btn btn-outline-magenta btn-block btn-lg" id="choice-vendor-register-btn">
+                    Register as Vendor <i class="fa-solid fa-arrow-right"></i>
+                </a>
             </div>
+        </div>
+
+        <div class="text-center" style="margin-top: 40px;">
+            <p class="text-muted">Already have an account? <a href="login.php" class="text-magenta font-weight-bold">Log in here</a></p>
         </div>
     </div>
-</main>
+</div>
 
 <style>
-/* Hover animation for card elements */
-.choice-card {
-    border: 1px solid rgba(30, 53, 47, 0.05) !important;
-}
-.choice-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 45px rgba(30, 53, 47, 0.12) !important;
-    border-color: var(--color-accent) !important;
-}
-
-/* Responsiveness overrides */
 @media (max-width: 768px) {
-    .choice-grid {
+    .choice-cards-container {
         grid-template-columns: 1fr !important;
-        gap: 30px !important;
-    }
-    .choice-card {
-        padding: 40px 25px !important;
     }
 }
 </style>
 
-<?php
-// Include footer
-require_once 'includes/footer.php';
-?>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
