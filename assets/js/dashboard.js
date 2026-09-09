@@ -74,7 +74,7 @@ async function toggleFavorite(dressId, buttonElement) {
 
         // Determine correct path to API endpoint
         let apiPath = '../api/toggle-favorite.php';
-        if (window.location.pathname.indexOf('/user/') === -1 && window.location.pathname.indexOf('/vendor/') === -1 && window.location.pathname.indexOf('/admin/') === -1) {
+        if (window.location.pathname.indexOf('/user/') === -1 && window.location.pathname.indexOf('/vendor/') === -1) {
             apiPath = 'api/toggle-favorite.php';
         }
 

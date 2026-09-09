@@ -13,11 +13,12 @@ require_once __DIR__ . '/database.php';
 try {
     echo "Starting Cloud Closet Database Setup...\n";
 
-    // 1. Create Notifications Table if not exists
+    // 0. Remove any legacy admin tables
+    $pdo->exec("DROP TABLE IF EXISTS `admins`");
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS `notifications` (
             `notification_id` INT AUTO_INCREMENT PRIMARY KEY,
-            `user_type` ENUM('user', 'vendor', 'admin') NOT NULL,
+            `user_type` ENUM('user', 'vendor') NOT NULL,
             `user_id` INT NOT NULL,
             `title` VARCHAR(255) NOT NULL,
             `message` TEXT NOT NULL,
@@ -253,18 +254,15 @@ try {
     if ($notifCount == 0) {
         $userId = $pdo->query("SELECT user_id FROM users LIMIT 1")->fetchColumn() ?: 1;
         $vendorId = 1;
-        $adminId = 1;
 
         $pdo->exec("
             INSERT INTO notifications (user_type, user_id, title, message, type, is_read, link) VALUES
             ('user', $userId, 'Booking Confirmed!', 'Your booking for Emerald Radiance Gown has been approved by the vendor.', 'success', 0, 'user/bookings.php'),
             ('user', $userId, 'Welcome to Cloud Closet', 'Enjoy 10% off your first sustainable designer dress rental with code SUSTAIN10.', 'info', 0, 'user/dresses.php'),
             ('vendor', $vendorId, 'New Booking Request', 'You have a new pending rental request for Liquid Gold Sequin Maxi.', 'info', 0, 'vendor/bookings.php'),
-            ('vendor', $vendorId, 'Vendor Application Approved', 'Welcome to Cloud Closet! Your store account is fully approved.', 'success', 1, 'vendor/dashboard.php'),
-            ('admin', $adminId, 'New Vendor Application', 'A new vendor boutique registered and is waiting for review.', 'warning', 0, 'admin/vendors.php'),
-            ('admin', $adminId, 'Payment Received', 'eSewa transaction received for rental order #1.', 'success', 1, 'admin/transactions.php')
+            ('vendor', $vendorId, 'Vendor Application Approved', 'Welcome to Cloud Closet! Your store account is fully approved.', 'success', 1, 'vendor/dashboard.php')
         ");
-        echo "✔ Seeded sample notifications for all roles.\n";
+        echo "✔ Seeded sample notifications.\n";
     }
 
     echo "\n=== Cloud Closet Database Setup Successfully Completed! ===\n";

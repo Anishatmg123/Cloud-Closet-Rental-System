@@ -10,10 +10,7 @@ require_once __DIR__ . '/../includes/auth.php';
 $role = 'user';
 $userId = 0;
 
-if (isset($_SESSION['admin_id'])) {
-    $role = 'admin';
-    $userId = $_SESSION['admin_id'];
-} elseif (isset($_SESSION['vendor_id'])) {
+if (isset($_SESSION['vendor_id'])) {
     $role = 'vendor';
     $userId = $_SESSION['vendor_id'];
 } elseif (isset($_SESSION['user_id'])) {

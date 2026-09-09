@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
             $stmt = $pdo->prepare("
                 INSERT INTO vendors (full_name, business_name, email, phone, address, password, status)
-                VALUES (:full_name, :business_name, :email, :phone, :address, :password, 'pending')
+                VALUES (:full_name, :business_name, :email, :phone, :address, :password, 'approved')
             ");
 
             $result = $stmt->execute([
@@ -90,22 +90,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($result) {
                 $vendorId = $pdo->lastInsertId();
 
-                // Send notification to Admin
-                $adminId = 1;
-                create_notification(
-                    $pdo, 
-                    'admin', 
-                    $adminId, 
-                    'New Vendor Application', 
-                    "Boutique '$business_name' has applied to become a Cloud Closet vendor.", 
-                    'warning', 
-                    'admin/vendors.php'
-                );
+                // Auto login vendor
+                $_SESSION['vendor_id'] = $vendorId;
+                $_SESSION['vendor_name'] = $full_name;
+                $_SESSION['business_name'] = $business_name;
+                $_SESSION['vendor_email'] = $email;
 
-                $submitted = true;
+                // Create welcome notification
+                create_notification($pdo, 'vendor', $vendorId, 'Welcome to Cloud Closet!', 'Your vendor boutique account is active. Start listing your dresses now.', 'success', 'vendor/dashboard.php');
+
+                set_flash('success', "Welcome to Cloud Closet, {$business_name}! Your boutique account is ready.");
+                header("Location: dashboard.php");
+                exit();
             }
         } catch (PDOException $e) {
-            $errors['general'] = "Application submission failed: " . $e->getMessage();
+            $errors['general'] = "Registration failed: " . $e->getMessage();
         }
     }
 }
@@ -121,27 +120,12 @@ require_once __DIR__ . '/../includes/header.php';
             </div>
             <span class="logo-main" style="font-size: 1.6rem;">CLOUD CLOSET</span>
         </a>
-        <p class="text-muted" style="font-size: 0.88rem;">Vendor Partner Application</p>
+        <p class="text-muted" style="font-size: 0.88rem;">Vendor Boutique Registration</p>
     </div>
 
     <div class="auth-card-box" style="max-width: 620px;">
-        <?php if ($submitted): ?>
-            <div class="text-center" style="padding: 20px 10px;">
-                <div style="width: 72px; height: 72px; border-radius: 50%; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 20px;">
-                    <i class="fa-solid fa-check"></i>
-                </div>
-                <h2 style="font-family: var(--font-heading); font-size: 2rem; margin-bottom: 12px; color: var(--text-primary);">Application Received!</h2>
-                <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.6; margin-bottom: 30px;">
-                    Thank you for applying to partner with Cloud Closet. Our team is currently reviewing your boutique application. Once approved, you can log in to list dresses and receive rental bookings.
-                </p>
-                <div style="display: flex; gap: 16px; justify-content: center;">
-                    <a href="login.php" class="btn btn-magenta">Vendor Login</a>
-                    <a href="../index.php" class="btn btn-subtle">Return Home</a>
-                </div>
-            </div>
-        <?php else: ?>
-            <h2 class="auth-card-title">List Your Boutique</h2>
-            <p class="auth-card-subtitle">Turn your premium wardrobe inventory into continuous rental income</p>
+        <h2 class="auth-card-title">Register Your Boutique</h2>
+        <p class="auth-card-subtitle">Turn your premium wardrobe inventory into continuous rental income</p>
 
             <?php if (!empty($errors['general'])): ?>
                 <div class="alert alert-error">
@@ -277,7 +261,7 @@ require_once __DIR__ . '/../includes/header.php';
                 </div>
 
                 <button type="submit" class="btn btn-magenta btn-block btn-lg" style="margin-top: 20px;" id="vendor-register-submit-btn">
-                    Submit Vendor Application <i class="fa-solid fa-arrow-right"></i>
+                    Create Boutique Account <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </form>
 
@@ -285,7 +269,6 @@ require_once __DIR__ . '/../includes/header.php';
                 <p>Already registered as a vendor? <a href="login.php">Vendor Login here</a></p>
                 <p style="margin-top: 8px;"><a href="../register.php">Register as a Customer instead</a></p>
             </div>
-        <?php endif; ?>
     </div>
 </div>
 

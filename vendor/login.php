@@ -39,11 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($vendor) {
                 if ($vendor['status'] === 'blocked') {
-                    $errors['general'] = "Your vendor account has been suspended. Please contact administrator support.";
-                } elseif ($vendor['status'] === 'pending') {
-                    $errors['general'] = "Your vendor boutique application is currently under review by our admin team. You will be notified upon approval.";
+                    $errors['general'] = "Your vendor account has been suspended. Please contact support.";
                 } elseif (password_verify($password, $vendor['password'])) {
-                    // Approved Vendor Login
+                    // Vendor Login
                     $_SESSION['vendor_id'] = $vendor['vendor_id'];
                     $_SESSION['vendor_name'] = $vendor['full_name'];
                     $_SESSION['business_name'] = $vendor['business_name'] ?? $vendor['full_name'];
@@ -83,7 +81,6 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="auth-role-tabs">
             <a href="../login.php" class="auth-role-tab">Customer</a>
             <a href="login.php" class="auth-role-tab active">Vendor</a>
-            <a href="../admin/login.php" class="auth-role-tab">Admin</a>
         </div>
 
         <h2 class="auth-card-title">Vendor Portal</h2>

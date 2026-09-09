@@ -28,7 +28,7 @@ try {
 
     if ($current_vendor['status'] === 'blocked') {
         unset($_SESSION['vendor_id'], $_SESSION['vendor_name'], $_SESSION['vendor_email']);
-        set_flash('error', 'Your vendor boutique account has been suspended. Please contact administration.');
+        set_flash('error', 'Your vendor boutique account has been suspended. Please contact support.');
         header("Location: ../vendor/login.php");
         exit();
     }

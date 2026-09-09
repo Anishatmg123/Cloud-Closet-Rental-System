@@ -7,21 +7,11 @@ $profileLink = '../user/profile.php';
 $logoutLink = '../logout.php';
 $searchPlaceholder = "Find your dream gown...";
 $searchAction = "../user/dresses.php";
-$showWishlist = true;
+$showWishlist = false;
 
-if (isset($_SESSION['admin_id'])) {
-    $role = 'admin';
-    $userId = $_SESSION['admin_id'];
-    $displayName = $_SESSION['full_name'] ?? 'Admin';
-    $avatarInitial = strtoupper(substr($displayName, 0, 1));
-    $profileLink = '../admin/dashboard.php';
-    $logoutLink = '../admin/logout.php';
-    $searchPlaceholder = "Search users, bookings, records...";
-    $searchAction = "../admin/bookings.php";
-    $showWishlist = false;
-} elseif (isset($_SESSION['vendor_id'])) {
+if (isset($_SESSION['vendor_id'])) {
     $role = 'vendor';
-    $userId = $_SESSION['vendor_id'];
+    $userId = (int)$_SESSION['vendor_id'];
     $displayName = $_SESSION['business_name'] ?? $_SESSION['vendor_name'] ?? 'Vendor';
     $avatarInitial = strtoupper(substr($displayName, 0, 1));
     $profileLink = '../vendor/profile.php';
@@ -31,7 +21,7 @@ if (isset($_SESSION['admin_id'])) {
     $showWishlist = false;
 } elseif (isset($_SESSION['user_id'])) {
     $role = 'user';
-    $userId = $_SESSION['user_id'];
+    $userId = (int)$_SESSION['user_id'];
     $displayName = $_SESSION['full_name'] ?? 'Customer';
     $avatarInitial = strtoupper(substr($displayName, 0, 1));
     $profileLink = '../user/profile.php';

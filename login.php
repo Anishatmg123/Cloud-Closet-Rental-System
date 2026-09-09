@@ -80,7 +80,6 @@ require_once __DIR__ . '/includes/header.php';
         <div class="auth-role-tabs">
             <a href="login.php" class="auth-role-tab active">Customer</a>
             <a href="vendor/login.php" class="auth-role-tab">Vendor</a>
-            <a href="admin/login.php" class="auth-role-tab">Admin</a>
         </div>
 
         <h2 class="auth-card-title">Welcome Back</h2>

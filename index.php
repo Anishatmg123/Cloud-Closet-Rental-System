@@ -43,6 +43,15 @@ if (isset($_SESSION['user_id'])) {
 <section class="landing-hero" id="home">
     <div class="container">
         <div class="hero-editorial-card">
+            <!-- Hero Background Image Slider -->
+            <div class="hero-slider" id="heroSlider">
+                <div class="hero-slide active" style="background-image: url('assets/images/hero_slide_1.jpg?v=3.0');"></div>
+                <div class="hero-slide" style="background-image: url('assets/images/hero_slide_2.jpg?v=3.0');"></div>
+                <div class="hero-slide" style="background-image: url('assets/images/hero_slide_3.jpg?v=3.0');"></div>
+                <div class="hero-slide" style="background-image: url('assets/images/hero_slide_4.jpg?v=3.0');"></div>
+                <div class="hero-slider-overlay"></div>
+            </div>
+
             <span class="hero-pill-badge">
                 <i class="fa-solid fa-sparkles"></i> Sustainable High Fashion Couture
             </span>
@@ -51,55 +60,12 @@ if (isset($_SESSION['user_id'])) {
                 Rent Beautiful Dresses Anywhere. Experience the future of sustainable fashion through our curated, premium editorial collection.
             </p>
 
-            <!-- 4 Role Cards / Login Pathways -->
-            <div class="hero-role-grid">
-                <!-- User Login Card -->
-                <div class="hero-role-card">
-                    <div class="role-icon-box">
-                        <i class="fa-solid fa-user-heart"></i>
-                    </div>
-                    <h3 class="role-card-title">User Login</h3>
-                    <p class="role-card-desc">Browse gowns, manage active rentals, and track deliveries.</p>
-                    <a href="login.php" class="btn btn-sm btn-magenta role-card-btn" id="hero-user-login-btn">
-                        Customer Login <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-                </div>
-
-                <!-- Vendor Login Card -->
-                <div class="hero-role-card">
-                    <div class="role-icon-box">
-                        <i class="fa-solid fa-shop"></i>
-                    </div>
-                    <h3 class="role-card-title">Vendor Login</h3>
-                    <p class="role-card-desc">List wardrobe dresses, manage stock, and review booking requests.</p>
-                    <a href="vendor/login.php" class="btn btn-sm btn-outline-magenta role-card-btn" id="hero-vendor-login-btn">
-                        Vendor Portal <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-                </div>
-
-                <!-- Admin Login Card -->
-                <div class="hero-role-card">
-                    <div class="role-icon-box">
-                        <i class="fa-solid fa-shield-halved"></i>
-                    </div>
-                    <h3 class="role-card-title">Administrator</h3>
-                    <p class="role-card-desc">System dashboard, approve vendors, manage transactions.</p>
-                    <a href="admin/login.php" class="btn btn-sm btn-outline-magenta role-card-btn" id="hero-admin-login-btn">
-                        Admin Central <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-                </div>
-
-                <!-- Register User Card -->
-                <div class="hero-role-card">
-                    <div class="role-icon-box">
-                        <i class="fa-solid fa-sparkles"></i>
-                    </div>
-                    <h3 class="role-card-title">Register Account</h3>
-                    <p class="role-card-desc">Join our sustainable fashion movement as a customer or vendor.</p>
-                    <a href="register-choice.php" class="btn btn-sm btn-magenta role-card-btn" id="hero-register-btn">
-                        Join Free <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-                </div>
+            <!-- Slider Navigation Dots -->
+            <div class="hero-slider-nav" id="heroSliderNav" role="tablist" aria-label="Featured looks">
+                <button type="button" class="hero-ctrl-dot active" data-slide="0" aria-label="Featured look 1"></button>
+                <button type="button" class="hero-ctrl-dot" data-slide="1" aria-label="Featured look 2"></button>
+                <button type="button" class="hero-ctrl-dot" data-slide="2" aria-label="Featured look 3"></button>
+                <button type="button" class="hero-ctrl-dot" data-slide="3" aria-label="Featured look 4"></button>
             </div>
         </div>
     </div>
@@ -257,7 +223,6 @@ if (isset($_SESSION['user_id'])) {
                 <ul class="footer-links-list">
                     <li><a href="login.php">Customer Login</a></li>
                     <li><a href="vendor/login.php">Vendor Boutique Portal</a></li>
-                    <li><a href="admin/login.php">Administrator Central</a></li>
                     <li><a href="register-choice.php">Register New Account</a></li>
                 </ul>
             </div>

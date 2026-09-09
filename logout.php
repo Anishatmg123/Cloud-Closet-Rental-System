@@ -10,7 +10,7 @@ unset($_SESSION['full_name']);
 unset($_SESSION['email']);
 
 // If no other sessions exist, destroy session
-if (empty($_SESSION['vendor_id']) && empty($_SESSION['admin_id'])) {
+if (empty($_SESSION['vendor_id'])) {
     session_destroy();
 }
 
