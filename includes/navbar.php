@@ -25,7 +25,7 @@ $prefix = isset($path_prefix) ? $path_prefix : '';
             </div>
             <div class="logo-text-group">
                 <span class="logo-main">CLOUD CLOSET</span>
-                <span class="logo-tag">Luxury Editorial Rental</span>
+                <span class="logo-tag">Luxury Edition Rental</span>
             </div>
         </a>
 
