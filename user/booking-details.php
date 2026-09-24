@@ -38,7 +38,7 @@ if (!$order) {
     exit();
 }
 
-$thumb = !empty($order['image']) && file_exists(__DIR__ . '/../' . $order['image']) ? '../' . $order['image'] : '../assets/images/hero_closet_banner.jpg';
+$thumb = get_dress_image_url($order['image'], $order['dress_name'], '../');
 ?>
 
 <div class="dashboard-layout">

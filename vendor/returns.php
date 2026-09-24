@@ -97,7 +97,7 @@ $returnedHistory = $returnedStmt->fetchAll();
                             </thead>
                             <tbody>
                                 <?php foreach ($activeOut as $out): 
-                                    $thumb = !empty($out['image']) && file_exists(__DIR__ . '/../' . $out['image']) ? '../' . $out['image'] : '../assets/images/hero_closet_banner.jpg';
+                                    $thumb = get_dress_image_url($out['image'], $out['dress_name'], '../');
                                 ?>
                                     <tr>
                                         <td><span class="font-weight-bold">#ORD-<?php echo str_pad($out['rental_id'], 5, '0', STR_PAD_LEFT); ?></span></td>

@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$thumb = !empty($currentImage) && file_exists(__DIR__ . '/../' . $currentImage) ? '../' . $currentImage : '../assets/images/hero_closet_banner.jpg';
+$thumb = get_dress_image_url($currentImage, $dress['dress_name'], '../');
 ?>
 
 <div class="dashboard-layout">

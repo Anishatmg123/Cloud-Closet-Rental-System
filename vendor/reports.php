@@ -152,7 +152,7 @@ try {
                             </thead>
                             <tbody>
                                 <?php foreach ($topDresses as $d): 
-                                    $thumb = !empty($d['image']) && file_exists(__DIR__ . '/../' . $d['image']) ? '../' . $d['image'] : '../assets/images/hero_closet_banner.jpg';
+                                    $thumb = get_dress_image_url($d['image'], $d['dress_name'], '../');
                                 ?>
                                     <tr>
                                         <td>

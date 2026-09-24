@@ -137,7 +137,7 @@ $bookings = $stmt->fetchAll();
                             </thead>
                             <tbody>
                                 <?php foreach ($bookings as $b): 
-                                    $thumb = !empty($b['image']) && file_exists(__DIR__ . '/../' . $b['image']) ? '../' . $b['image'] : '../assets/images/hero_closet_banner.jpg';
+                                    $thumb = get_dress_image_url($b['image'], $b['dress_name'], '../');
                                 ?>
                                     <tr>
                                         <td>

@@ -94,7 +94,7 @@ $dresses = $stmt->fetchAll();
                             </thead>
                             <tbody>
                                 <?php foreach ($dresses as $dress): 
-                                    $thumb = !empty($dress['image']) && file_exists(__DIR__ . '/../' . $dress['image']) ? '../' . $dress['image'] : '../assets/images/hero_closet_banner.jpg';
+                                    $thumb = get_dress_image_url($dress['image'], $dress['dress_name'], '../');
                                 ?>
                                     <tr>
                                         <td>

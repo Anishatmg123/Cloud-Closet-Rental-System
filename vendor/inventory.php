@@ -76,7 +76,7 @@ $inventory = $stmt->fetchAll();
                             </thead>
                             <tbody>
                                 <?php foreach ($inventory as $item): 
-                                    $thumb = !empty($item['image']) && file_exists(__DIR__ . '/../' . $item['image']) ? '../' . $item['image'] : '../assets/images/hero_closet_banner.jpg';
+                                    $thumb = get_dress_image_url($item['image'], $item['dress_name'], '../');
                                 ?>
                                     <tr>
                                         <td>

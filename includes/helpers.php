@@ -168,3 +168,16 @@ if (!function_exists('get_user_favorites_ids')) {
         }
     }
 }
+
+if (!function_exists('get_dress_image_url')) {
+    function get_dress_image_url($imagePath, $dressName, $basePath = '') {
+        if (!empty($imagePath) && strpos($imagePath, 'hero_closet_banner.jpg') === false) {
+            $checkPath = __DIR__ . '/../' . ltrim($imagePath, '/');
+            if (file_exists($checkPath)) {
+                return $basePath . $imagePath;
+            }
+        }
+        // Fallback to placeholder if no real image is found
+        return $basePath . 'assets/images/hero_closet_banner.jpg';
+    }
+}

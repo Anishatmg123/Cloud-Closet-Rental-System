@@ -47,7 +47,7 @@ $wishlistDresses = $stmt->fetchAll();
             <?php if (!empty($wishlistDresses)): ?>
                 <div class="dress-grid">
                     <?php foreach ($wishlistDresses as $dress): 
-                        $imgSrc = !empty($dress['image']) && file_exists(__DIR__ . '/../' . $dress['image']) ? '../' . $dress['image'] : '../assets/images/hero_closet_banner.jpg';
+                        $imgSrc = get_dress_image_url($dress['image'], $dress['dress_name'], '../');
                     ?>
                         <div class="dress-card">
                             <div class="dress-image-box">

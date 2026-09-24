@@ -205,7 +205,7 @@ $userFavs = get_user_favorites_ids($pdo, $userId);
                         <div class="dress-grid" style="grid-template-columns: repeat(2, 1fr); gap: 20px;">
                             <?php foreach ($curatedDresses as $dress): 
                                 $isFav = in_array($dress['dress_id'], $userFavs);
-                                $imgSrc = !empty($dress['image']) && file_exists(__DIR__ . '/../' . $dress['image']) ? '../' . $dress['image'] : '../assets/images/hero_closet_banner.jpg';
+                                $imgSrc = get_dress_image_url($dress['image'], $dress['dress_name'], '../');
                             ?>
                                 <div class="dress-card" style="box-shadow: none; border: 1px solid rgba(15, 23, 42, 0.06);">
                                     <div class="dress-image-box" style="height: 260px;">
@@ -298,7 +298,7 @@ $userFavs = get_user_favorites_ids($pdo, $userId);
                             </thead>
                             <tbody>
                                 <?php foreach ($recentRentals as $rental): 
-                                    $thumb = !empty($rental['image']) && file_exists(__DIR__ . '/../' . $rental['image']) ? '../' . $rental['image'] : '../assets/images/hero_closet_banner.jpg';
+                                    $thumb = get_dress_image_url($rental['image'], $rental['dress_name'], '../');
                                 ?>
                                     <tr>
                                         <td>

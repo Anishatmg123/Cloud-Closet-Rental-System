@@ -329,7 +329,7 @@ $chartBookings = !empty($monthlyData) ? array_map('intval', array_column($monthl
                     <?php if (!empty($inventoryItems)): ?>
                         <div style="display: flex; flex-direction: column; gap: 16px;">
                             <?php foreach ($inventoryItems as $item): 
-                                $thumb = !empty($item['image']) && file_exists(__DIR__ . '/../' . $item['image']) ? '../' . $item['image'] : '../assets/images/hero_closet_banner.jpg';
+                                $thumb = get_dress_image_url($item['image'], $item['dress_name'], '../');
                                 $stockStatus = ($item['availability'] === 'available') ? 'Available' : 'Unavailable';
                                 $statusBadge = ($item['availability'] === 'available') ? 'badge-success' : 'badge-danger';
                             ?>

@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Image Upload Handling
-    $imagePath = 'assets/images/hero_closet_banner.jpg'; // default fallback
+    $imagePath = ''; // default to empty to allow dynamic image generation
     if (isset($_FILES['dress_image']) && $_FILES['dress_image']['error'] === UPLOAD_ERR_OK) {
         $fileTmp = $_FILES['dress_image']['tmp_name'];
         $fileName = $_FILES['dress_image']['name'];
