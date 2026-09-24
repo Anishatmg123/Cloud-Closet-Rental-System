@@ -231,7 +231,7 @@ if (isset($_SESSION['user_id'])) {
                 <ul class="footer-links-list">
                     <li><a href="javascript:void(0)" onclick="showToast('Customer support is active 24/7 at support@cloudcloset.com', 'info')">Support & FAQ</a></li>
                     <li><a href="javascript:void(0)">Rental Terms</a></li>
-                    <li><a href="javascript:void(0)">Eco Dry-Cleaning</a></li>
+
                     <li><a href="javascript:void(0)">Privacy Policy</a></li>
                 </ul>
             </div>
