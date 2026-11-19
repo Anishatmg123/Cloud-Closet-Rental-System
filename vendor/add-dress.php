@@ -198,12 +198,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="form-row-2">
                         <div class="form-group">
-                            <label class="form-label">Rental Price ($ per 4-day period) <span class="text-danger">*</span></label>
+                            <label class="form-label">Rental Price (रु. per 4-day period) <span class="text-danger">*</span></label>
                             <input type="number" 
                                    step="0.01" 
                                    name="rental_price" 
                                    class="form-input no-icon <?php echo isset($errors['rental_price']) ? 'is-invalid' : ''; ?>" 
-                                   placeholder="e.g. 45.00" 
+                                   placeholder="e.g. 4500" 
                                    value="<?php echo htmlspecialchars($rentalPrice); ?>" 
                                    required>
                             <?php if (isset($errors['rental_price'])): ?>
@@ -212,12 +212,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Refundable Security Deposit ($)</label>
+                            <label class="form-label">Refundable Security Deposit (रु.)</label>
                             <input type="number" 
                                    step="0.01" 
                                    name="security_deposit" 
                                    class="form-input no-icon" 
-                                   placeholder="e.g. 20.00" 
+                                   placeholder="e.g. 2000" 
                                    value="<?php echo htmlspecialchars($securityDeposit); ?>">
                         </div>
                     </div>

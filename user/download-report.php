@@ -14,7 +14,7 @@ header('Content-Disposition: attachment; filename="Cloud_Closet_Rental_Report_' 
 $output = fopen('php://output', 'w');
 
 // Header Row
-fputcsv($output, ['Order ID', 'Dress Name', 'Category', 'Rental Start', 'Rental Return', 'Duration (Days)', 'Rental Fee ($)', 'Security Deposit ($)', 'Total Paid ($)', 'Payment Method', 'Booking Status', 'Booking Date']);
+fputcsv($output, ['Order ID', 'Dress Name', 'Category', 'Rental Start', 'Rental Return', 'Duration (Days)', 'Rental Fee (NPR)', 'Security Deposit (NPR)', 'Total Paid (NPR)', 'Payment Method', 'Booking Status', 'Booking Date']);
 
 try {
     $stmt = $pdo->prepare("

@@ -213,7 +213,7 @@ $thumb = get_dress_image_url($currentImage, $dress['dress_name'], '../');
 
                     <div class="form-row-2">
                         <div class="form-group">
-                            <label class="form-label">Rental Price ($ per 4-day period) <span class="text-danger">*</span></label>
+                            <label class="form-label">Rental Price (रु. per 4-day period) <span class="text-danger">*</span></label>
                             <input type="number" 
                                    step="0.01" 
                                    name="rental_price" 
@@ -223,7 +223,7 @@ $thumb = get_dress_image_url($currentImage, $dress['dress_name'], '../');
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Security Deposit ($)</label>
+                            <label class="form-label">Security Deposit (रु.)</label>
                             <input type="number" 
                                    step="0.01" 
                                    name="security_deposit" 

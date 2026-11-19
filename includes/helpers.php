@@ -4,8 +4,47 @@
  */
 
 if (!function_exists('format_currency')) {
+    /**
+     * Formats an amount in Nepalese Rupees (NPR) with the 'रु. ' symbol
+     * and proper Nepalese comma formatting.
+     * Examples:
+     *   4000.00  -> रु. 4,000
+     *   4500.00  -> रु. 4,500
+     *   5000.00  -> रु. 5,000
+     *   100000   -> रु. 1,00,000
+     */
     function format_currency($amount) {
-        return '$' . number_format((float)$amount, 2);
+        $amount = (float)$amount;
+        $isNegative = $amount < 0;
+        $absAmount = abs($amount);
+
+        // Check if there is a fractional / decimal part
+        $rounded = round($absAmount, 2);
+        $intPartNum = (int)floor($rounded);
+        $fraction = round(($rounded - $intPartNum) * 100);
+        $hasDecimals = ($fraction > 0);
+
+        $intPart = (string)$intPartNum;
+
+        // Proper Nepalese / South Asian comma grouping (last 3 digits, then groups of 2)
+        if (strlen($intPart) > 3) {
+            $lastThree = substr($intPart, -3);
+            $remaining = substr($intPart, 0, -3);
+            $groups = [];
+            while (strlen($remaining) > 2) {
+                $groups[] = substr($remaining, -2);
+                $remaining = substr($remaining, 0, -2);
+            }
+            if (strlen($remaining) > 0) {
+                $groups[] = $remaining;
+            }
+            $formattedInt = implode(',', array_reverse($groups)) . ',' . $lastThree;
+        } else {
+            $formattedInt = $intPart;
+        }
+
+        $formattedNumber = ($isNegative ? '-' : '') . $formattedInt . ($hasDecimals ? '.' . sprintf('%02d', $fraction) : '');
+        return 'रु. ' . $formattedNumber;
     }
 }
 

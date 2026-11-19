@@ -14,7 +14,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     header('Content-Disposition: attachment; filename="Vendor_Report_' . date('Y-m-d') . '.csv"');
     $output = fopen('php://output', 'w');
 
-    fputcsv($output, ['Order ID', 'Customer Name', 'Dress Name', 'Category', 'Rental Start', 'Rental Return', 'Duration (Days)', 'Rental Fee ($)', 'Deposit ($)', 'Total ($)', 'Status', 'Date Placed']);
+    fputcsv($output, ['Order ID', 'Customer Name', 'Dress Name', 'Category', 'Rental Start', 'Rental Return', 'Duration (Days)', 'Rental Fee (NPR)', 'Deposit (NPR)', 'Total (NPR)', 'Status', 'Date Placed']);
 
     $stmt = $pdo->prepare("
         SELECT r.rental_id, u.full_name as customer_name, d.dress_name, c.category_name,
@@ -109,7 +109,7 @@ try {
                 <div class="stat-card-widget">
                     <div class="stat-card-top">
                         <span class="stat-card-label">TOTAL EARNINGS</span>
-                        <div class="stat-icon-circle emerald"><i class="fa-solid fa-dollar-sign"></i></div>
+                        <div class="stat-icon-circle emerald"><i class="fa-solid fa-coins"></i></div>
                     </div>
                     <div class="stat-card-value"><?php echo format_currency($totalEarnings); ?></div>
                     <div class="stat-card-trend"><span class="trend-up">Lifetime rental revenue</span></div>

@@ -81,8 +81,8 @@ try {
                 'description' => 'A breathtaking emerald green satin floor-length gown featuring an asymmetrical shoulder strap, subtle side slit, and corseted bodice. Ideal for black-tie galas and luxury banquets.',
                 'size' => 'M',
                 'color' => 'Emerald Green',
-                'rental_price' => 45.00,
-                'security_deposit' => 20.00,
+                'rental_price' => 4500.00,
+                'security_deposit' => 2000.00,
                 'image' => 'assets/images/emerald_radiance.jpg',
                 'availability' => 'available'
             ],
@@ -93,8 +93,8 @@ try {
                 'description' => 'Delicate organza cocktail dress embroidered with 3D floral petals and finished with puff sleeves. A playful yet sophisticated silhouette for rooftop parties and fashion launches.',
                 'size' => 'S',
                 'color' => 'Blush Pink',
-                'rental_price' => 38.00,
-                'security_deposit' => 15.00,
+                'rental_price' => 3800.00,
+                'security_deposit' => 1500.00,
                 'image' => 'assets/images/floral_blossom.jpg',
                 'availability' => 'available'
             ],
@@ -105,8 +105,8 @@ try {
                 'description' => 'A timeless bias-cut midnight navy satin slip gown with a delicate cowl neckline and low-back crisscross straps. Drapes effortlessly and shimmers in candlelight.',
                 'size' => 'L',
                 'color' => 'Midnight Navy',
-                'rental_price' => 52.00,
-                'security_deposit' => 25.00,
+                'rental_price' => 5200.00,
+                'security_deposit' => 2500.00,
                 'image' => 'assets/images/midnight_satin.jpg',
                 'availability' => 'available'
             ],
@@ -117,8 +117,8 @@ try {
                 'description' => 'Turn heads in this liquid-gold cascading sequin dress with long sleeves and an open back. Fully lined with ultra-soft stretch modal for maximum red-carpet comfort.',
                 'size' => 'S',
                 'color' => 'Champagne Gold',
-                'rental_price' => 60.00,
-                'security_deposit' => 30.00,
+                'rental_price' => 6000.00,
+                'security_deposit' => 3000.00,
                 'image' => 'assets/images/liquid_gold.jpg',
                 'availability' => 'available'
             ],
@@ -129,8 +129,8 @@ try {
                 'description' => 'Hand-stitched French Chantilly lace over a structured sweetheart corset with a cascading chapel train. A masterpiece for wedding receptions and rehearsal dinners.',
                 'size' => 'M',
                 'color' => 'Ivory White',
-                'rental_price' => 85.00,
-                'security_deposit' => 40.00,
+                'rental_price' => 8500.00,
+                'security_deposit' => 4000.00,
                 'image' => 'assets/images/ivory_lace.jpg',
                 'availability' => 'available'
             ],
@@ -141,8 +141,8 @@ try {
                 'description' => 'A tailored two-piece double-breasted velvet power suit in rich magenta. Tailored sharp lapels, satin covered buttons, and flattering wide-leg trousers.',
                 'size' => 'M',
                 'color' => 'Deep Magenta',
-                'rental_price' => 48.00,
-                'security_deposit' => 20.00,
+                'rental_price' => 4800.00,
+                'security_deposit' => 2000.00,
                 'image' => 'assets/images/magenta_velvet.jpg',
                 'availability' => 'available'
             ],
@@ -153,8 +153,8 @@ try {
                 'description' => 'Lavish crimson raw silk lehenga with intricate golden zari hand embroidery and embellished net dupatta. Perfect for luxury wedding festivities.',
                 'size' => 'L',
                 'color' => 'Crimson Red',
-                'rental_price' => 95.00,
-                'security_deposit' => 50.00,
+                'rental_price' => 9500.00,
+                'security_deposit' => 5000.00,
                 'image' => 'assets/images/royal_crimson.jpg',
                 'availability' => 'available'
             ],
@@ -165,8 +165,8 @@ try {
                 'description' => 'Structured crepe mini dress with hand-applied rhinestone trim around the sweetheart neckline and hemline. The ultimate statement cocktail look.',
                 'size' => 'XS',
                 'color' => 'Onyx Black',
-                'rental_price' => 42.00,
-                'security_deposit' => 20.00,
+                'rental_price' => 4200.00,
+                'security_deposit' => 2000.00,
                 'image' => 'assets/images/crystal_mini.jpg',
                 'availability' => 'available'
             ]
