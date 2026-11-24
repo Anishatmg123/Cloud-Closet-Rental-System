@@ -59,11 +59,6 @@ if (isset($pdo) && $role === 'user' && $userId) {
 <!-- Universal Dashboard Topbar -->
 <header class="dashboard-topbar">
     <div class="topbar-left">
-        <!-- Mobile Sidebar Toggle -->
-        <button class="topbar-toggle-btn d-lg-none" onclick="toggleMobileSidebar()" aria-label="Toggle navigation">
-            <i class="fa-solid fa-bars"></i>
-        </button>
-
         <!-- Topbar Search Bar -->
         <form action="<?php echo $searchAction; ?>" method="GET" class="topbar-search-form">
             <div class="search-input-group">
