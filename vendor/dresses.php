@@ -75,78 +75,54 @@ $dresses = $stmt->fetchAll();
                 </form>
             </div>
 
-            <!-- Dress Catalog Table Card -->
-            <div class="dashboard-card">
+            <!-- Dress Catalog Cards -->
+            <div>
                 <?php if (!empty($dresses)): ?>
-                    <div class="table-responsive">
-                        <table class="modern-table">
-                            <thead>
-                                <tr>
-                                    <th>Outfit</th>
-                                    <th>Category</th>
-                                    <th>Size & Color</th>
-                                    <th>Rental Price</th>
-                                    <th>Deposit</th>
-                                    <th>Availability</th>
-                                    <th>Rentals</th>
-                                    <th style="text-align: right;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($dresses as $dress): 
-                                    $thumb = get_dress_image_url($dress['image'], $dress['dress_name'], '../');
-                                ?>
-                                    <tr>
-                                        <td>
-                                            <div class="table-user-cell">
-                                                <img src="<?php echo htmlspecialchars($thumb); ?>" alt="Dress" class="table-item-thumb">
-                                                <div>
-                                                    <span class="font-weight-bold" style="color: var(--text-primary); display: block; font-size: 0.95rem;">
-                                                        <?php echo htmlspecialchars($dress['dress_name']); ?>
-                                                    </span>
-                                                    <span class="text-muted" style="font-size: 0.75rem;">Added <?php echo date('M d, Y', strtotime($dress['created_at'])); ?></span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span style="font-size: 0.88rem; font-weight: 600;">
-                                                <?php echo htmlspecialchars($dress['category_name'] ?? 'Unassigned'); ?>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="font-weight-bold">Size <?php echo htmlspecialchars($dress['size'] ?? 'M'); ?></span>
-                                            <span class="text-muted" style="display: block; font-size: 0.78rem;"><?php echo htmlspecialchars($dress['color'] ?? 'Standard'); ?></span>
-                                        </td>
-                                        <td>
-                                            <span class="font-weight-bold text-magenta" style="font-size: 1.05rem;">
-                                                <?php echo format_currency($dress['rental_price']); ?>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span style="font-size: 0.88rem; color: var(--text-muted);">
-                                                <?php echo format_currency($dress['security_deposit']); ?>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <?php echo get_status_badge($dress['availability']); ?>
-                                        </td>
-                                        <td>
-                                            <span class="font-weight-bold"><?php echo $dress['total_rentals_count']; ?></span> <span class="text-muted" style="font-size: 0.78rem;">times</span>
-                                        </td>
-                                        <td style="text-align: right;">
-                                            <div style="display: inline-flex; gap: 8px;">
-                                                <a href="edit-dress.php?id=<?php echo $dress['dress_id']; ?>" class="btn btn-sm btn-subtle" title="Edit Dress">
-                                                    <i class="fa-solid fa-pen-to-square"></i> Edit
-                                                </a>
-                                                <a href="delete-dress.php?id=<?php echo $dress['dress_id']; ?>" class="btn btn-sm btn-subtle text-danger" onclick="return confirm('Are you sure you want to delete this dress listing?');" title="Delete Dress">
-                                                    <i class="fa-solid fa-trash"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                    <div class="vendor-dress-grid">
+                        <?php foreach ($dresses as $dress):
+                            $thumb = get_dress_image_url($dress['image'], $dress['dress_name'], '../');
+                        ?>
+                            <article class="vendor-dress-card">
+                                <a class="vendor-dress-image" href="edit-dress.php?id=<?php echo $dress['dress_id']; ?>">
+                                    <img src="<?php echo htmlspecialchars($thumb); ?>" alt="<?php echo htmlspecialchars($dress['dress_name']); ?>" loading="lazy">
+                                </a>
+                                <div class="vendor-dress-card-body">
+                                    <div class="vendor-dress-card-meta">
+                                        <span class="dress-card-category"><?php echo htmlspecialchars($dress['category_name'] ?? 'Unassigned'); ?></span>
+                                        <?php echo get_status_badge($dress['availability']); ?>
+                                    </div>
+                                    <h2 class="vendor-dress-card-title"><?php echo htmlspecialchars($dress['dress_name']); ?></h2>
+                                    <p class="vendor-dress-description">
+                                        <?php echo htmlspecialchars($dress['description'] ?: 'No description provided.'); ?>
+                                    </p>
+                                    <div class="vendor-dress-attributes">
+                                        <span>Size: <strong><?php echo htmlspecialchars($dress['size'] ?? 'M'); ?></strong></span>
+                                        <span>Color: <strong><?php echo htmlspecialchars($dress['color'] ?? 'Standard'); ?></strong></span>
+                                    </div>
+                                    <div class="vendor-dress-prices">
+                                        <div>
+                                            <span class="vendor-dress-price-label">Rental (4 days)</span>
+                                            <strong class="vendor-dress-rent-price"><?php echo format_currency($dress['rental_price']); ?></strong>
+                                        </div>
+                                        <div>
+                                            <span class="vendor-dress-price-label">Refundable deposit</span>
+                                            <strong><?php echo format_currency($dress['security_deposit']); ?></strong>
+                                        </div>
+                                    </div>
+                                    <div class="vendor-dress-card-footer">
+                                        <span class="text-muted"><?php echo (int)$dress['total_rentals_count']; ?> rentals</span>
+                                        <div class="vendor-dress-actions">
+                                            <a href="edit-dress.php?id=<?php echo $dress['dress_id']; ?>" class="btn btn-sm btn-subtle">
+                                                <i class="fa-solid fa-pen-to-square"></i> Edit details
+                                            </a>
+                                            <a href="delete-dress.php?id=<?php echo $dress['dress_id']; ?>" class="btn btn-sm btn-subtle text-danger" onclick="return confirm('Are you sure you want to delete this dress listing?');" aria-label="Delete <?php echo htmlspecialchars($dress['dress_name']); ?>">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        <?php endforeach; ?>
                     </div>
                 <?php else: ?>
                     <div class="text-center" style="padding: 50px 20px;">

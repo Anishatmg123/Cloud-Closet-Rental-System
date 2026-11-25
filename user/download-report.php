@@ -1,3 +1,4 @@
+
 <?php
 /**
  * Customer Rental Report CSV Exporter
@@ -13,14 +14,29 @@ header('Content-Disposition: attachment; filename="Cloud_Closet_Rental_Report_' 
 
 $output = fopen('php://output', 'w');
 
-// Header Row
-fputcsv($output, ['Order ID', 'Dress Name', 'Category', 'Rental Start', 'Rental Return', 'Duration (Days)', 'Rental Fee (NPR)', 'Security Deposit (NPR)', 'Total Paid (NPR)', 'Payment Method', 'Booking Status', 'Booking Date']);
+// Header Row - Updated to NPR
+fputcsv($output, [
+    'Order ID',
+    'Dress Name',
+    'Category',
+    'Rental Start',
+    'Rental Return',
+    'Duration (Days)',
+    'Rental Fee (NPR)',
+    'Security Deposit (NPR)',
+    'Total Paid (NPR)',
+    'Payment Method',
+    'Booking Status',
+    'Booking Date'
+]);
 
 try {
     $stmt = $pdo->prepare("
-        SELECT r.rental_id, d.dress_name, c.category_name, r.rental_start_date, r.rental_end_date, 
-               r.total_days, r.rental_amount, r.security_deposit, r.total_amount,
-               p.payment_method, r.rental_status, r.request_date
+        SELECT r.rental_id, d.dress_name, c.category_name,
+               r.rental_start_date, r.rental_end_date,
+               r.total_days, r.rental_amount, r.security_deposit,
+               r.total_amount, p.payment_method,
+               r.rental_status, r.request_date
         FROM rentals r
         JOIN dresses d ON r.dress_id = d.dress_id
         LEFT JOIN categories c ON d.category_id = c.category_id
@@ -28,6 +44,7 @@ try {
         WHERE r.user_id = :user_id
         ORDER BY r.request_date DESC
     ");
+
     $stmt->execute([':user_id' => $userId]);
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -46,7 +63,10 @@ try {
             $row['request_date']
         ]);
     }
-} catch (Exception $e) {}
+
+} catch (Exception $e) {
+    // Handle export errors
+}
 
 fclose($output);
 exit();

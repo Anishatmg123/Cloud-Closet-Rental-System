@@ -41,7 +41,9 @@ $bookingSuccess = false;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_booking') {
     $startDate = trim($_POST['rental_start_date'] ?? '');
     $endDate = trim($_POST['rental_end_date'] ?? '');
-    $paymentMethod = trim($_POST['payment_method'] ?? 'esewa');
+    $paymentMethod = trim($_POST['payment_method'] ?? 'cash_on_delivery');
+    $esewaId = trim($_POST['esewa_id'] ?? '');
+    $esewaPin = trim($_POST['esewa_pin'] ?? '');
     $today = date('Y-m-d');
 
     if (empty($startDate) || empty($endDate)) {
@@ -50,6 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $errors['general'] = "Rental start date cannot be in the past.";
     } elseif ($endDate <= $startDate) {
         $errors['general'] = "Return date must be after the rental start date.";
+    } elseif ($paymentMethod === 'esewa' && (empty($esewaId) || empty($esewaPin))) {
+        $errors['general'] = "Please enter your eSewa ID (Mobile/Email) and MPIN/Password to complete the payment.";
     } else {
         // Server-side check for overlapping bookings
         $isAvailable = is_dress_available($pdo, $dressId, $startDate, $endDate);
@@ -274,16 +278,59 @@ $imgSrc = get_dress_image_url($dress['image'], $dress['dress_name'], '../');
                                 <!-- Payment Method Choice -->
                                 <div class="form-group">
                                     <label class="form-label">Payment Method</label>
-                                    <div style="display: flex; gap: 14px;">
-                                        <label style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 12px; background: #ffffff; border-radius: var(--radius-md); border: 1px solid rgba(15, 23, 42, 0.08); cursor: pointer;">
-                                            <input type="radio" name="payment_method" value="esewa" checked>
-                                            <span style="font-weight: 600; font-size: 0.9rem;"><i class="fa-solid fa-wallet text-magenta"></i> eSewa / Card</span>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                        <label id="label-cod" style="display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: #ffffff; border-radius: var(--radius-md); border: 2px solid #60a5fa; cursor: pointer; transition: all 0.2s ease;">
+                                            <input type="radio" name="payment_method" value="cash_on_delivery" id="pay-cod" checked onchange="togglePaymentBoxes()">
+                                            <span style="font-weight: 600; font-size: 0.9rem; color: #1e293b;">
+                                                <i class="fa-solid fa-truck" style="color: #2563eb; margin-right: 4px;"></i> Cash on Delivery
+                                            </span>
                                         </label>
-                                        <label style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 12px; background: #ffffff; border-radius: var(--radius-md); border: 1px solid rgba(15, 23, 42, 0.08); cursor: pointer;">
-                                            <input type="radio" name="payment_method" value="cash_on_delivery">
-                                            <span style="font-weight: 600; font-size: 0.9rem;"><i class="fa-solid fa-truck text-muted"></i> Cash On Delivery</span>
+                                        <label id="label-esewa" style="display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: #ffffff; border-radius: var(--radius-md); border: 2px solid rgba(15, 23, 42, 0.1); cursor: pointer; transition: all 0.2s ease;">
+                                            <input type="radio" name="payment_method" value="esewa" id="pay-esewa" onchange="togglePaymentBoxes()">
+                                            <span style="font-weight: 600; font-size: 0.9rem; color: #1e293b;">
+                                                <i class="fa-solid fa-wallet" style="color: #60bb46; margin-right: 4px;"></i> eSewa
+                                            </span>
                                         </label>
                                     </div>
+                                </div>
+
+                                <!-- eSewa Login / Payment Box (shown only when eSewa is selected) -->
+                                <div id="esewa-login-box" style="display: none; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #bbf7d0;">
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <span style="background: #60bb46; color: #ffffff; font-weight: 900; font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;">eSewa</span>
+                                            <span style="font-weight: 700; font-size: 0.92rem; color: #166534;">Pay via eSewa Account</span>
+                                        </div>
+                                        <span style="font-size: 0.75rem; color: #15803d; background: #dcfce7; padding: 2px 8px; border-radius: 12px; font-weight: 600;">Secure Portal</span>
+                                    </div>
+
+                                    <div style="margin-bottom: 12px;">
+                                        <label for="esewa_id" style="display: block; font-size: 0.82rem; font-weight: 600; color: #166534; margin-bottom: 4px;">eSewa ID (Mobile Number / Email)</label>
+                                        <div style="position: relative;">
+                                            <input type="text" 
+                                                   id="esewa_id" 
+                                                   name="esewa_id" 
+                                                   class="form-input no-icon" 
+                                                   placeholder="e.g. 98XXXXXXXX or email@domain.com"
+                                                   style="padding: 10px 12px; font-size: 0.9rem; background: #ffffff; border: 1px solid #86efac; border-radius: 6px; width: 100%;">
+                                        </div>
+                                    </div>
+
+                                    <div style="margin-bottom: 8px;">
+                                        <label for="esewa_pin" style="display: block; font-size: 0.82rem; font-weight: 600; color: #166534; margin-bottom: 4px;">MPIN / Password</label>
+                                        <div style="position: relative;">
+                                            <input type="password" 
+                                                   id="esewa_pin" 
+                                                   name="esewa_pin" 
+                                                   class="form-input no-icon" 
+                                                   placeholder="Enter eSewa MPIN / Password"
+                                                   maxlength="20"
+                                                   style="padding: 10px 12px; font-size: 0.9rem; background: #ffffff; border: 1px solid #86efac; border-radius: 6px; width: 100%;">
+                                        </div>
+                                    </div>
+                                    <small style="color: #15803d; font-size: 0.75rem; display: flex; align-items: center; gap: 4px; margin-top: 6px;">
+                                        <i class="fa-solid fa-lock"></i> Your login details are securely encrypted and verified.
+                                    </small>
                                 </div>
 
                                 <!-- Summary Calculation Breakdown -->
@@ -315,6 +362,35 @@ $imgSrc = get_dress_image_url($dress['image'], $dress['dress_name'], '../');
 </div>
 
 <script>
+// Toggle eSewa Login box based on selected payment method
+function togglePaymentBoxes() {
+    const isEsewa = document.getElementById('pay-esewa').checked;
+    const esewaBox = document.getElementById('esewa-login-box');
+    const esewaIdInput = document.getElementById('esewa_id');
+    const esewaPinInput = document.getElementById('esewa_pin');
+    const labelCod = document.getElementById('label-cod');
+    const labelEsewa = document.getElementById('label-esewa');
+
+    if (isEsewa) {
+        esewaBox.style.display = 'block';
+        esewaIdInput.required = true;
+        esewaPinInput.required = true;
+        labelEsewa.style.borderColor = '#60bb46';
+        labelCod.style.borderColor = 'rgba(15, 23, 42, 0.1)';
+    } else {
+        esewaBox.style.display = 'none';
+        esewaIdInput.required = false;
+        esewaPinInput.required = false;
+        labelCod.style.borderColor = '#60a5fa';
+        labelEsewa.style.borderColor = 'rgba(15, 23, 42, 0.1)';
+    }
+}
+
+// Initial state on page load
+document.addEventListener('DOMContentLoaded', function() {
+    togglePaymentBoxes();
+});
+
 // Real-time Date Availability Checker & Total Calculator
 async function checkLiveAvailability() {
     const startInput = document.getElementById('rental_start_date');

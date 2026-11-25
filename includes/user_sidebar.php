@@ -17,6 +17,9 @@ $userInitials = strtoupper(substr($userName, 0, 1));
                 <span class="brand-sub">Sustainable Couture</span>
             </div>
         </a>
+        <button class="sidebar-close-btn d-lg-none" onclick="toggleMobileSidebar()" aria-label="Close sidebar">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
     </div>
 
     <!-- Navigation Menu -->

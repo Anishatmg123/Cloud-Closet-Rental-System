@@ -1,3 +1,4 @@
+
 <?php
 /**
  * Vendor Add Dress Listing
@@ -5,6 +6,7 @@
 
 $page_title = "Add New Dress";
 $path_prefix = '../';
+
 require_once __DIR__ . '/../includes/vendor_auth.php';
 require_once __DIR__ . '/../includes/header.php';
 
@@ -19,7 +21,7 @@ $categoryId = 0;
 $size = 'M';
 $color = '';
 $rentalPrice = '';
-$securityDeposit = '20.00';
+$securityDeposit = '2000.00';
 $description = '';
 $availability = 'available';
 
@@ -37,15 +39,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($dressName)) {
         $errors['dress_name'] = "Dress name is required.";
     }
+
     if (!$categoryId) {
         $errors['category_id'] = "Please select a category.";
     }
+
     if ($rentalPrice <= 0) {
         $errors['rental_price'] = "Please enter a valid rental price.";
     }
 
     // Image Upload Handling
-    $imagePath = ''; // default to empty to allow dynamic image generation
+    $imagePath = '';
+
     if (isset($_FILES['dress_image']) && $_FILES['dress_image']['error'] === UPLOAD_ERR_OK) {
         $fileTmp = $_FILES['dress_image']['tmp_name'];
         $fileName = $_FILES['dress_image']['name'];
@@ -53,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
         $allowedExts = ['jpg', 'jpeg', 'png', 'webp'];
+
         if (!in_array($fileExt, $allowedExts)) {
             $errors['image'] = "Only JPG, PNG, and WebP images are permitted.";
         } elseif ($fileSize > 5 * 1024 * 1024) {
@@ -60,10 +66,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Verify image contents
             $check = @getimagesize($fileTmp);
+
             if ($check === false) {
                 $errors['image'] = "Uploaded file is not a valid image.";
             } else {
                 $uploadDir = __DIR__ . '/../assets/images/';
+
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0755, true);
                 }
@@ -83,9 +91,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         try {
             $stmt = $pdo->prepare("
-                INSERT INTO dresses (vendor_id, category_id, dress_name, description, size, color, rental_price, security_deposit, image, availability)
-                VALUES (:vendor_id, :category_id, :dress_name, :description, :size, :color, :rental_price, :security_deposit, :image, :availability)
+                INSERT INTO dresses (
+                    vendor_id,
+                    category_id,
+                    dress_name,
+                    description,
+                    size,
+                    color,
+                    rental_price,
+                    security_deposit,
+                    image,
+                    availability
+                )
+                VALUES (
+                    :vendor_id,
+                    :category_id,
+                    :dress_name,
+                    :description,
+                    :size,
+                    :color,
+                    :rental_price,
+                    :security_deposit,
+                    :image,
+                    :availability
+                )
             ");
+
             $stmt->execute([
                 ':vendor_id' => $vendorId,
                 ':category_id' => $categoryId,
@@ -100,8 +131,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
 
             set_flash('success', "Dress '{$dressName}' has been added to your wardrobe catalog!");
+
             header("Location: dresses.php");
             exit();
+
         } catch (PDOException $e) {
             $errors['general'] = "Database error: " . $e->getMessage();
         }
@@ -110,63 +143,99 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <div class="dashboard-layout">
+
     <?php require_once __DIR__ . '/../includes/vendor_sidebar.php'; ?>
 
     <div class="dashboard-main-wrapper">
+
         <?php require_once __DIR__ . '/../includes/topbar.php'; ?>
 
         <main class="dashboard-content-area">
+
             <?php echo render_flash(); ?>
 
             <div class="page-header-row">
                 <div>
-                    <a href="dresses.php" class="text-magenta" style="font-size: 0.88rem; font-weight: 600;">&larr; Back to Dresses</a>
-                    <h1 class="page-title-text" style="margin-top: 4px;">Add New Dress Listing</h1>
+                    <a href="dresses.php" class="text-magenta" style="font-size: 0.88rem; font-weight: 600;">
+                        &larr; Back to Dresses
+                    </a>
+
+                    <h1 class="page-title-text" style="margin-top: 4px;">
+                        Add New Dress Listing
+                    </h1>
                 </div>
             </div>
 
             <div class="dashboard-card" style="max-width: 860px;">
+
                 <?php if (!empty($errors['general'])): ?>
                     <div class="alert alert-error">
                         <i class="fa-solid fa-circle-exclamation alert-icon"></i>
-                        <div class="alert-content"><?php echo htmlspecialchars($errors['general']); ?></div>
+                        <div class="alert-content">
+                            <?php echo htmlspecialchars($errors['general']); ?>
+                        </div>
                     </div>
                 <?php endif; ?>
 
                 <form action="add-dress.php" method="POST" enctype="multipart/form-data" novalidate>
+
                     <?php echo csrf_field(); ?>
 
+                    <!-- Dress Name -->
                     <div class="form-group">
-                        <label class="form-label">Dress Name / Title <span class="text-danger">*</span></label>
-                        <input type="text" 
-                               name="dress_name" 
-                               class="form-input no-icon <?php echo isset($errors['dress_name']) ? 'is-invalid' : ''; ?>" 
-                               placeholder="e.g. Midnight Velvet Ball Gown" 
-                               value="<?php echo htmlspecialchars($dressName); ?>" 
+                        <label class="form-label">
+                            Dress Name / Title <span class="text-danger">*</span>
+                        </label>
+
+                        <input type="text"
+                               name="dress_name"
+                               class="form-input no-icon <?php echo isset($errors['dress_name']) ? 'is-invalid' : ''; ?>"
+                               placeholder="e.g. Midnight Velvet Ball Gown"
+                               value="<?php echo htmlspecialchars($dressName); ?>"
                                required>
+
                         <?php if (isset($errors['dress_name'])): ?>
-                            <div class="field-error-text"><?php echo htmlspecialchars($errors['dress_name']); ?></div>
+                            <div class="field-error-text">
+                                <?php echo htmlspecialchars($errors['dress_name']); ?>
+                            </div>
                         <?php endif; ?>
                     </div>
 
+                    <!-- Category and Size -->
                     <div class="form-row-2">
+
                         <div class="form-group">
-                            <label class="form-label">Category <span class="text-danger">*</span></label>
-                            <select name="category_id" class="form-input no-icon <?php echo isset($errors['category_id']) ? 'is-invalid' : ''; ?>" required>
+                            <label class="form-label">
+                                Category <span class="text-danger">*</span>
+                            </label>
+
+                            <select name="category_id"
+                                    class="form-input no-icon <?php echo isset($errors['category_id']) ? 'is-invalid' : ''; ?>"
+                                    required>
+
                                 <option value="">Select Category</option>
+
                                 <?php foreach ($categories as $cat): ?>
-                                    <option value="<?php echo $cat['category_id']; ?>" <?php echo ($categoryId === (int)$cat['category_id']) ? 'selected' : ''; ?>>
+                                    <option value="<?php echo $cat['category_id']; ?>"
+                                        <?php echo ($categoryId === (int)$cat['category_id']) ? 'selected' : ''; ?>>
                                         <?php echo htmlspecialchars($cat['category_name']); ?>
                                     </option>
                                 <?php endforeach; ?>
+
                             </select>
+
                             <?php if (isset($errors['category_id'])): ?>
-                                <div class="field-error-text"><?php echo htmlspecialchars($errors['category_id']); ?></div>
+                                <div class="field-error-text">
+                                    <?php echo htmlspecialchars($errors['category_id']); ?>
+                                </div>
                             <?php endif; ?>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Size <span class="text-danger">*</span></label>
+                            <label class="form-label">
+                                Size <span class="text-danger">*</span>
+                            </label>
+
                             <select name="size" class="form-input no-icon">
                                 <option value="XS" <?php echo ($size === 'XS') ? 'selected' : ''; ?>>XS - Extra Small</option>
                                 <option value="S" <?php echo ($size === 'S') ? 'selected' : ''; ?>>S - Small</option>
@@ -175,81 +244,128 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <option value="XL" <?php echo ($size === 'XL') ? 'selected' : ''; ?>>XL - Extra Large</option>
                             </select>
                         </div>
+
                     </div>
 
+                    <!-- Color and Availability -->
                     <div class="form-row-2">
+
                         <div class="form-group">
                             <label class="form-label">Primary Color</label>
-                            <input type="text" 
-                                   name="color" 
-                                   class="form-input no-icon" 
-                                   placeholder="e.g. Emerald Green, Blush Pink, Black" 
+
+                            <input type="text"
+                                   name="color"
+                                   class="form-input no-icon"
+                                   placeholder="e.g. Emerald Green, Blush Pink, Black"
                                    value="<?php echo htmlspecialchars($color); ?>">
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Initial Availability</label>
+
                             <select name="availability" class="form-input no-icon">
-                                <option value="available" <?php echo ($availability === 'available') ? 'selected' : ''; ?>>Available for Rent</option>
-                                <option value="unavailable" <?php echo ($availability === 'unavailable') ? 'selected' : ''; ?>>Unavailable / Under Maintenance</option>
+                                <option value="available" <?php echo ($availability === 'available') ? 'selected' : ''; ?>>
+                                    Available for Rent
+                                </option>
+
+                                <option value="unavailable" <?php echo ($availability === 'unavailable') ? 'selected' : ''; ?>>
+                                    Unavailable / Under Maintenance
+                                </option>
                             </select>
                         </div>
+
                     </div>
 
+                    <!-- Rental Price and Security Deposit -->
                     <div class="form-row-2">
+
                         <div class="form-group">
-                            <label class="form-label">Rental Price (रु. per 4-day period) <span class="text-danger">*</span></label>
-                            <input type="number" 
-                                   step="0.01" 
-                                   name="rental_price" 
-                                   class="form-input no-icon <?php echo isset($errors['rental_price']) ? 'is-invalid' : ''; ?>" 
-                                   placeholder="e.g. 4500" 
-                                   value="<?php echo htmlspecialchars($rentalPrice); ?>" 
+                            <label class="form-label">
+                                Rental Price (Rs. per 4-day period)
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <input type="number"
+                                   step="0.01"
+                                   name="rental_price"
+                                   class="form-input no-icon <?php echo isset($errors['rental_price']) ? 'is-invalid' : ''; ?>"
+                                   placeholder="e.g. 4500"
+                                   value="<?php echo htmlspecialchars((string)$rentalPrice); ?>"
                                    required>
+
                             <?php if (isset($errors['rental_price'])): ?>
-                                <div class="field-error-text"><?php echo htmlspecialchars($errors['rental_price']); ?></div>
+                                <div class="field-error-text">
+                                    <?php echo htmlspecialchars($errors['rental_price']); ?>
+                                </div>
                             <?php endif; ?>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Refundable Security Deposit (रु.)</label>
-                            <input type="number" 
-                                   step="0.01" 
-                                   name="security_deposit" 
-                                   class="form-input no-icon" 
-                                   placeholder="e.g. 2000" 
-                                   value="<?php echo htmlspecialchars($securityDeposit); ?>">
+                            <label class="form-label">
+                                Refundable Security Deposit (Rs.)
+                            </label>
+
+                            <input type="number"
+                                   step="0.01"
+                                   name="security_deposit"
+                                   class="form-input no-icon"
+                                   placeholder="e.g. 2000"
+                                   value="<?php echo htmlspecialchars((string)$securityDeposit); ?>">
                         </div>
+
                     </div>
 
+                    <!-- Image Upload -->
                     <div class="form-group">
-                        <label class="form-label">High-Resolution Gown Image</label>
-                        <input type="file" 
-                               name="dress_image" 
-                               class="form-input no-icon <?php echo isset($errors['image']) ? 'is-invalid' : ''; ?>" 
+                        <label class="form-label">
+                            High-Resolution Gown Image
+                        </label>
+
+                        <input type="file"
+                               name="dress_image"
+                               class="form-input no-icon <?php echo isset($errors['image']) ? 'is-invalid' : ''; ?>"
                                accept="image/jpeg,image/png,image/webp">
-                        <span class="text-muted" style="font-size: 0.78rem;">Upload portrait editorial image (JPG, PNG, WebP max 5MB).</span>
+
+                        <span class="text-muted" style="font-size: 0.78rem;">
+                            Upload portrait editorial image (JPG, PNG, WebP max 5MB).
+                        </span>
+
                         <?php if (isset($errors['image'])): ?>
-                            <div class="field-error-text"><?php echo htmlspecialchars($errors['image']); ?></div>
+                            <div class="field-error-text">
+                                <?php echo htmlspecialchars($errors['image']); ?>
+                            </div>
                         <?php endif; ?>
                     </div>
 
+                    <!-- Description -->
                     <div class="form-group">
-                        <label class="form-label">Garment Description & Styling Notes</label>
-                        <textarea name="description" 
-                                  rows="4" 
-                                  class="form-input no-icon" 
+                        <label class="form-label">
+                            Garment Description & Styling Notes
+                        </label>
+
+                        <textarea name="description"
+                                  rows="4"
+                                  class="form-input no-icon"
                                   placeholder="Describe the fabric, neckline, silhouette, recommended occasion, and fit tips..."><?php echo htmlspecialchars($description); ?></textarea>
                     </div>
 
+                    <!-- Buttons -->
                     <div style="display: flex; gap: 16px; margin-top: 24px;">
+
                         <button type="submit" class="btn btn-magenta btn-lg">
-                            <i class="fa-solid fa-plus"></i> Save & Publish Dress
+                            <i class="fa-solid fa-plus"></i>
+                            Save & Publish Dress
                         </button>
-                        <a href="dresses.php" class="btn btn-subtle btn-lg">Cancel</a>
+
+                        <a href="dresses.php" class="btn btn-subtle btn-lg">
+                            Cancel
+                        </a>
+
                     </div>
+
                 </form>
             </div>
+
         </main>
     </div>
 </div>

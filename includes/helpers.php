@@ -1,3 +1,4 @@
+
 <?php
 /**
  * Cloud Closet - Global Helper Functions
@@ -5,46 +6,47 @@
 
 if (!function_exists('format_currency')) {
     /**
-     * Formats an amount in Nepalese Rupees (NPR) with the 'रु. ' symbol
-     * and proper Nepalese comma formatting.
+     * Formats amount in Nepalese Rupees (NPR).
      * Examples:
-     *   4000.00  -> रु. 4,000
-     *   4500.00  -> रु. 4,500
-     *   5000.00  -> रु. 5,000
-     *   100000   -> रु. 1,00,000
+     * 4000.00  -> RS. 4,000
+     * 4500.00  -> RS. 4,500
+     * 100000   -> RS. 1,00,000
      */
     function format_currency($amount) {
         $amount = (float)$amount;
         $isNegative = $amount < 0;
         $absAmount = abs($amount);
 
-        // Check if there is a fractional / decimal part
         $rounded = round($absAmount, 2);
         $intPartNum = (int)floor($rounded);
-        $fraction = round(($rounded - $intPartNum) * 100);
+        $fraction = (int)round(($rounded - $intPartNum) * 100);
         $hasDecimals = ($fraction > 0);
 
         $intPart = (string)$intPartNum;
 
-        // Proper Nepalese / South Asian comma grouping (last 3 digits, then groups of 2)
         if (strlen($intPart) > 3) {
             $lastThree = substr($intPart, -3);
             $remaining = substr($intPart, 0, -3);
             $groups = [];
+
             while (strlen($remaining) > 2) {
                 $groups[] = substr($remaining, -2);
                 $remaining = substr($remaining, 0, -2);
             }
+
             if (strlen($remaining) > 0) {
                 $groups[] = $remaining;
             }
+
             $formattedInt = implode(',', array_reverse($groups)) . ',' . $lastThree;
         } else {
             $formattedInt = $intPart;
         }
 
-        $formattedNumber = ($isNegative ? '-' : '') . $formattedInt . ($hasDecimals ? '.' . sprintf('%02d', $fraction) : '');
-        return 'रु. ' . $formattedNumber;
+        $formattedNumber = ($isNegative ? '-' : '') . $formattedInt .
+            ($hasDecimals ? '.' . sprintf('%02d', $fraction) : '');
+
+        return 'RS. ' . $formattedNumber;
     }
 }
 
@@ -124,25 +126,23 @@ if (!function_exists('calculate_rental_days')) {
 
 if (!function_exists('is_dress_available')) {
     /**
-     * Checks if a dress is free of conflicting active/approved bookings during given dates.
+     * Checks if a dress is free of conflicting active/approved bookings.
      */
     function is_dress_available($pdo, $dress_id, $start_date, $end_date, $exclude_rental_id = null) {
-        // 1. Check dress baseline availability flag
         $stmt = $pdo->prepare("SELECT availability FROM dresses WHERE dress_id = :dress_id LIMIT 1");
         $stmt->execute([':dress_id' => $dress_id]);
         $dress = $stmt->fetch();
+
         if (!$dress || $dress['availability'] === 'unavailable') {
             return false;
         }
 
-        // 2. Check overlapping bookings (approved, active, or pending)
-        $sql = "SELECT COUNT(*) FROM rentals 
-                WHERE dress_id = :dress_id 
-                  AND rental_status IN ('approved', 'active', 'pending')
-                  AND (
-                      (rental_start_date <= :end_date AND rental_end_date >= :start_date)
-                  )";
-        
+        $sql = "SELECT COUNT(*) FROM rentals
+                WHERE dress_id = :dress_id
+                AND rental_status IN ('approved', 'active', 'pending')
+                AND rental_start_date <= :end_date
+                AND rental_end_date >= :start_date";
+
         $params = [
             ':dress_id' => $dress_id,
             ':start_date' => $start_date,
@@ -169,6 +169,7 @@ if (!function_exists('create_notification')) {
                 INSERT INTO notifications (user_type, user_id, title, message, type, is_read, link)
                 VALUES (:user_type, :user_id, :title, :message, :type, 0, :link)
             ");
+
             return $stmt->execute([
                 ':user_type' => $user_type,
                 ':user_id' => $user_id,
@@ -186,8 +187,18 @@ if (!function_exists('create_notification')) {
 if (!function_exists('get_unread_notifications_count')) {
     function get_unread_notifications_count($pdo, $user_type, $user_id) {
         try {
-            $stmt = $pdo->prepare("SELECT COUNT(*) FROM notifications WHERE user_type = :user_type AND user_id = :user_id AND is_read = 0");
-            $stmt->execute([':user_type' => $user_type, ':user_id' => $user_id]);
+            $stmt = $pdo->prepare("
+                SELECT COUNT(*) FROM notifications
+                WHERE user_type = :user_type
+                AND user_id = :user_id
+                AND is_read = 0
+            ");
+
+            $stmt->execute([
+                ':user_type' => $user_type,
+                ':user_id' => $user_id
+            ]);
+
             return (int)$stmt->fetchColumn();
         } catch (Exception $e) {
             return 0;
@@ -198,9 +209,11 @@ if (!function_exists('get_unread_notifications_count')) {
 if (!function_exists('get_user_favorites_ids')) {
     function get_user_favorites_ids($pdo, $user_id) {
         if (!$user_id) return [];
+
         try {
             $stmt = $pdo->prepare("SELECT dress_id FROM favorites WHERE user_id = :user_id");
             $stmt->execute([':user_id' => $user_id]);
+
             return $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
         } catch (Exception $e) {
             return [];
@@ -212,11 +225,12 @@ if (!function_exists('get_dress_image_url')) {
     function get_dress_image_url($imagePath, $dressName, $basePath = '') {
         if (!empty($imagePath) && strpos($imagePath, 'hero_closet_banner.jpg') === false) {
             $checkPath = __DIR__ . '/../' . ltrim($imagePath, '/');
+
             if (file_exists($checkPath)) {
                 return $basePath . $imagePath;
             }
         }
-        // Fallback to placeholder if no real image is found
+
         return $basePath . 'assets/images/hero_closet_banner.jpg';
     }
 }
